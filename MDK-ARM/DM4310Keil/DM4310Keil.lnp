@@ -1,0 +1,28 @@
+--cpu=Cortex-M4.fp.sp
+"dm4310keil\startup_stm32f407xx.o"
+"dm4310keil\main.o"
+"dm4310keil\gpio.o"
+"dm4310keil\can.o"
+"dm4310keil\stm32f4xx_it.o"
+"dm4310keil\stm32f4xx_hal_msp.o"
+"dm4310keil\stm32f4xx_hal_can.o"
+"dm4310keil\stm32f4xx_hal_rcc.o"
+"dm4310keil\stm32f4xx_hal_rcc_ex.o"
+"dm4310keil\stm32f4xx_hal_flash.o"
+"dm4310keil\stm32f4xx_hal_flash_ex.o"
+"dm4310keil\stm32f4xx_hal_flash_ramfunc.o"
+"dm4310keil\stm32f4xx_hal_gpio.o"
+"dm4310keil\stm32f4xx_hal_dma_ex.o"
+"dm4310keil\stm32f4xx_hal_dma.o"
+"dm4310keil\stm32f4xx_hal_pwr.o"
+"dm4310keil\stm32f4xx_hal_pwr_ex.o"
+"dm4310keil\stm32f4xx_hal_cortex.o"
+"dm4310keil\stm32f4xx_hal.o"
+"dm4310keil\stm32f4xx_hal_exti.o"
+"dm4310keil\system_stm32f4xx.o"
+"dm4310keil\can_1.o"
+"dm4310keil\pid.o"
+--strict --scatter "DM4310Keil\DM4310Keil.sct"
+--summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list "DM4310Keil.map" -o DM4310Keil\DM4310Keil.axf
