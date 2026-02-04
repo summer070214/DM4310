@@ -119,11 +119,14 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+<<<<<<< HEAD
           <Key>DLGUARM</Key>
           <Name>
 </Name>        </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
+=======
+>>>>>>> 7554381cd9bbc6d54ccfe7dc276a0c3ce3038b0c
           <Key>ARMRTXEVENTFLAGS</Key>
           <Name>-L70 -Z18 -C0 -M0 -T1</Name>
         </SetRegEntry>
