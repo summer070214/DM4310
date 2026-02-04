@@ -30,3 +30,4 @@ dm4310keil\pid.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfun
 dm4310keil\pid.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 dm4310keil\pid.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 dm4310keil\pid.o: ..\user\PID.h
+dm4310keil\pid.o: ..\user\struct_typedef.h

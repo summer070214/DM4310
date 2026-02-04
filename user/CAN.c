@@ -31,8 +31,6 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan) {
         if (rx_header.StdId == DM4310_MasterID) {
             DM4310_Get_Data(&DM4310_Rx_Data,rx_data);
 						DM4310_Rx_Data.key++;
-//            DM4310_Tx_Data.DM4310_T_ff=PIDCompute(&pid_data,DM4310_Rx_Data.DM4310_T);
-//            DM4310_Control(&hcan1,&DM4310_Tx_Data);
         }
 
     }
@@ -63,7 +61,10 @@ void DM4310_Get_Data(DM4310_Rx_Data_t *DM4310_Rx_Data,uint8_t *rx_data) {
 float f_constrain(float val, float min, float max)
 {
     if (val < min) return min;
+//			if (val < min) DM4310_DisEnable(&hcan1);
     if (val > max) return max;
+//	    if (val > max) DM4310_DisEnable(&hcan1);
+
     return val;
 }
 

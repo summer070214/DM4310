@@ -12,29 +12,6 @@
 #define DM4310_CANID  0x01
 #define DM4310_MasterID 0x11
 
-//接收数据
-typedef struct {
-    uint8_t DM4310_ID;
-    uint8_t DM4310_ERR;
-    float DM4310_POS;
-    float DM4310_VEL;
-    float DM4310_T;
-    float DM4310_T_MOS;
-    float DM4310_T_Rotor;
-    float DM4310_POS_Last;
-    float DM4310_VEL_Last;
-    float DM4310_T_Last;
-		uint16_t key;
-}DM4310_Rx_Data_t;
-typedef struct {
-		uint8_t DM4310_ID;
-		float DM4310_P_des;
-    float DM4310_V_des;
-    float DM4310_Kp;
-    float DM4310_Kd;
-    float DM4310_T_ff;
-}DM4310_Tx_Data_t;
-
 extern DM4310_Rx_Data_t DM4310_Rx_Data ;
 extern DM4310_Tx_Data_t DM4310_Tx_Data ;
 

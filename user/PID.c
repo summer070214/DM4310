@@ -3,6 +3,8 @@
 //
 #include "main.h"
 #include "PID.h"
+#include "struct_typedef.h"
+
 #include <stdint.h>
 #include "PID.h"
 void PIDInit( PID_Data *pid,float kp,float ki,float kd) {
@@ -20,11 +22,16 @@ float PIDCompute( PID_Data *pid,float current) {
     pid->current=current;
 //    pid->error=pid->current-pid->goal;
 	  pid->error=pid->goal-pid->current;
+	if(pid->error>1){pid->error_sum=0;}
+	else{
     pid->error_sum=pid->error+pid->error_sum;
+		if(pid->error_sum>4.5) pid->error_sum=4.5;
+		if(pid->error_sum<-4.5) pid->error_sum=-4.5;
+	}
     pid->kp_output=pid->kp*pid->error;
     pid->ki_output=pid->ki*pid->error_sum;
     pid->kd_output=pid->kd*(pid->error-pid->last_error);
     pid->last_error=pid->error;
-    int16_t output=pid->kp_output+pid->ki_output+pid->kd_output;
+    float output=pid->kp_output+pid->ki_output+pid->kd_output;
     return output;
 }

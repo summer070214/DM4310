@@ -20,56 +20,24 @@
 #include "main.h"
 #include "can.h"
 #include "gpio.h"
+#include "PID.h"
+#include "CAN.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "PID.h"
-#include "CAN.h"
+#include "struct_typedef.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-typedef struct {
-    uint8_t DM4310_ID;
-    uint8_t DM4310_ERR;
-    float DM4310_POS;
-    float DM4310_VEL;
-    float DM4310_T;
-    float DM4310_T_MOS;
-    float DM4310_T_Rotor;
-    float DM4310_POS_Last;
-    float DM4310_VEL_Last;
-    float DM4310_T_Last;
-		uint16_t key;
-}DM4310_Rx_Data_t;
-typedef struct {
-    uint8_t DM4310_ID;
-    float DM4310_P_des;
-    float DM4310_V_des;
-    float DM4310_Kp;
-    float DM4310_Kd;
-    float DM4310_T_ff;
-}DM4310_Tx_Data_t;
-//typedef struct{
-//    float kp;            //比例系数
-//    float ki;            //积分系数
-//    float kd;            //微分系数
-//    float goal;          //目标值
-//    float current;       //当前值
-//    float error;         //误差
-//    float last_error;    //上次误差
-//    float error_sum;      //误差和
-//    float ki_output;     //积分值
-//    float kd_output;
-//    float kp_output;   //微分值
-//}PID_Data;
 uint8_t rx_data[8];
 uint8_t tx_data[8];
 DM4310_Rx_Data_t DM4310_Rx_Data;
 DM4310_Tx_Data_t DM4310_Tx_Data;
-PID_Data pid_data;
-uint16_t a;
-//uint16_t b;
+PID_Data pid_data_v;
+PID_Data pid_data_p;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -96,13 +64,6 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-//void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-//		if (GPIO_Pin == GPIO_PIN_0) 
-//    {
-//		HAL_GPIO_WritePin(GPIOH,GPIO_PIN_12,GPIO_PIN_RESET);
-//		DM4310_DisEnable(&hcan1);
-//    }
-//}
 /* USER CODE END 0 */
 
 /**
@@ -146,12 +107,13 @@ __ISB();  /* USER CODE END 1 */
 
 // 3. 开启接收中断（如果需要）
 	HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
-  PIDInit(&pid_data,0.73,0.01,0.4);
-  PID_Changegoal(&pid_data,20);
+  PIDInit(&pid_data_v,0.73,0.01,0.4);
+	PIDInit(&pid_data_p,15,0.01,0.01);
+  PID_Changegoal(&pid_data_p,2);
   DM4310_Tx_Data_Init(&DM4310_Tx_Data,0,0,0,0,0);
   DM4310_Enable(&hcan1); // 使能 ID 为 0x01 的电机
 
-	DM4310_Control(&hcan1,&DM4310_Tx_Data);
+//	DM4310_Control(&hcan1,&DM4310_Tx_Data);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -159,14 +121,18 @@ __ISB();  /* USER CODE END 1 */
   while (1)
   {
 		HAL_GPIO_WritePin(GPIOH,GPIO_PIN_12,GPIO_PIN_SET);
-//			if(DM4310_Rx_Data.DM4310_ERR==0x08 || DM4310_Rx_Data.DM4310_ERR==0x09 || DM4310_Rx_Data.DM4310_ERR==0x0A || DM4310_Rx_Data.DM4310_ERR==0x0B || DM4310_Rx_Data.DM4310_ERR==0x0C || DM4310_Rx_Data.DM4310_ERR==0x0D || DM4310_Rx_Data.DM4310_ERR==0x0E){
-//					DM4310_DisEnable(&hcan1);
-//			}	
-//			else{		DM4310_Control(&hcan1,&DM4310_Tx_Data);}
+			if(DM4310_Rx_Data.DM4310_ERR==0x08 || DM4310_Rx_Data.DM4310_ERR==0x09 || DM4310_Rx_Data.DM4310_ERR==0x0A || DM4310_Rx_Data.DM4310_ERR==0x0B || DM4310_Rx_Data.DM4310_ERR==0x0C || DM4310_Rx_Data.DM4310_ERR==0x0D || DM4310_Rx_Data.DM4310_ERR==0x0E){
+					DM4310_DisEnable(&hcan1);
+			}	
+			else{		
+		float v=PIDCompute(&pid_data_p,DM4310_Rx_Data.DM4310_POS);
+		PID_Changegoal(&pid_data_v,v);
+		DM4310_Tx_Data.DM4310_T_ff=PIDCompute(&pid_data_v,DM4310_Rx_Data.DM4310_VEL);
+    DM4310_Control(&hcan1,&DM4310_Tx_Data);
 		HAL_Delay(1);
-		DM4310_Tx_Data.DM4310_T_ff=PIDCompute(&pid_data,DM4310_Rx_Data.DM4310_VEL);
-		DM4310_Control(&hcan1,&DM4310_Tx_Data);
-    /* USER CODE END WHILE */
+			}
+		/* USER CODE END WHILE */		
+
 
     /* USER CODE BEGIN 3 */
   }
