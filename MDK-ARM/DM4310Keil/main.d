@@ -31,3 +31,4 @@ dm4310keil\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h
 dm4310keil\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex.h
 dm4310keil\main.o: ../Core/Inc/can.h
 dm4310keil\main.o: ../Core/Inc/gpio.h
+dm4310keil\main.o: ../user/PID.h

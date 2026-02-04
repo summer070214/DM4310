@@ -10,6 +10,8 @@
 #include <stdint.h>
 #include "stm32f4xx_hal_can.h"
 #define DM4310_CANID  0x01
+#define DM4310_MasterID 0x11
+
 //接收数据
 typedef struct {
     uint8_t DM4310_ID;
@@ -22,10 +24,11 @@ typedef struct {
     float DM4310_POS_Last;
     float DM4310_VEL_Last;
     float DM4310_T_Last;
+		uint16_t key;
 }DM4310_Rx_Data_t;
 typedef struct {
-    uint8_t DM4310_ID;
-    float DM4310_P_des;
+		uint8_t DM4310_ID;
+		float DM4310_P_des;
     float DM4310_V_des;
     float DM4310_Kp;
     float DM4310_Kd;
@@ -37,10 +40,10 @@ extern DM4310_Tx_Data_t DM4310_Tx_Data ;
 
 #define P_MIN -12.5f  // 位置最小值 (rad)
 #define P_MAX 12.5f   // 位置最大值 (rad)
-#define V_MIN -30.0f  // 速度最小值 (rad/s)
-#define V_MAX 30.0f   // 速度最大值 (rad/s)
-#define T_MIN -10.0f  // 扭矩最小值 (N.m)
-#define T_MAX 10.0f   // 扭矩最大值 (N.m)
+#define V_MIN -45.0f  // 速度最小值 (rad/s)
+#define V_MAX 45.0f   // 速度最大值 (rad/s)
+#define T_MIN -18.0f  // 扭矩最小值 (N.m)
+#define T_MAX 18.0f   // 扭矩最大值 (N.m)
 #define KP_MIN 0.0f   // Kp 最小值
 #define KP_MAX 500.0f // Kp 最大值
 #define KD_MIN 0.0f   // Kd 最小值
@@ -58,18 +61,22 @@ uint16_t float_to_uint(float x, float x_min, float x_max, int bits);
 void DM4310_Get_Data(DM4310_Rx_Data_t *DM4310_Rx_Data,uint8_t *Rx_Data);
 void DM4310_Tx_Data_Init(
     DM4310_Tx_Data_t *DM4310_Tx_Data,
-    float DM4310_P_des,
-    float DM4310_V_des,
-    float DM4310_Kp,
-    float DM4310_Kd,
-    float DM4310_T_ff);
-void DM4310_Control(CAN_HandleTypeDef *hcan,DM4310_Tx_Data_t *DM4310_Tx_Data);
+    float _P_des,
+    float _V_des,
+    float _Kp,
+    float _Kd,
+    float _T_ff);
+void DM4310_Enable(CAN_HandleTypeDef *hcan);
+void DM4310_DisEnable(CAN_HandleTypeDef *hcan);
 
+void DM4310_Control(CAN_HandleTypeDef *hcan,DM4310_Tx_Data_t *DM4310_Tx_Data);
+void CAN_Filter_Config(void);
 
 
 extern CAN_HandleTypeDef hcan1;
-extern uint8_t Rx_Data[8];
-extern uint8_t Tx_Data[8];
+extern uint8_t rx_data[8];
+extern uint8_t tx_data[8];
 
 #endif //DM4310_CAN_H
+		
 		

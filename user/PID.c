@@ -18,11 +18,12 @@ void PID_Changegoal( PID_Data *pid,float goal) {
 }
 float PIDCompute( PID_Data *pid,float current) {
     pid->current=current;
-    pid->error=pid->current-pid->goal;
+//    pid->error=pid->current-pid->goal;
+	  pid->error=pid->goal-pid->current;
     pid->error_sum=pid->error+pid->error_sum;
     pid->kp_output=pid->kp*pid->error;
-    pid->ki_output=pid->ki*(pid->error-pid->last_error);
-    pid->kd_output=pid->kd*pid->error_sum;
+    pid->ki_output=pid->ki*pid->error_sum;
+    pid->kd_output=pid->kd*(pid->error-pid->last_error);
     pid->last_error=pid->error;
     int16_t output=pid->kp_output+pid->ki_output+pid->kd_output;
     return output;

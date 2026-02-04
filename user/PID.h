@@ -23,3 +23,4 @@ void PIDInit( PID_Data *pid,float kp,float ki,float kd);
 void PID_Changegoal( PID_Data *pid,float goal);
 float PIDCompute( PID_Data *pid,float current);
 #endif //DM4310_PID_H
+
